@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UsuarioRepository {
@@ -32,7 +33,7 @@ public class UsuarioRepository {
     // Guardar un usuario
     public int guardar(Usuario usuario) {
         try {
-            String sql = "INSERT INTO Usuario (nombre, email, contraseña) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO Usuario ( nombre, email, contraseña) VALUES (?, ?, ?)";
             return jdbcTemplate.update(sql, usuario.getNombre(), usuario.getEmail(), usuario.getContrasena());
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,6 +49,25 @@ public class UsuarioRepository {
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+    public Optional<Usuario> findByEmail(String email) {
+        try {
+            String sql = "SELECT * FROM Usuario WHERE email = ?";
+            Usuario usuario = jdbcTemplate.queryForObject(sql, usuarioRowMapper, email);
+            return Optional.ofNullable(usuario);
+        } catch (Exception e) {
+            return Optional.empty(); // Si no encuentra el usuario, devuelve un Optional vacío
+        }
+    }
+
+    public Optional<Usuario> loginUsuario(String email, String contrasena) {
+        try {
+            String sql = "SELECT * FROM Usuario WHERE email = ? AND contraseña = ?";
+            Usuario usuario = jdbcTemplate.queryForObject(sql, usuarioRowMapper, email, contrasena);
+            return Optional.ofNullable(usuario);
+        } catch (Exception e) {
+            return Optional.empty(); // Si no hay coincidencias, devuelve vacío
         }
     }
 

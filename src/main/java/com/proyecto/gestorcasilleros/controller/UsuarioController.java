@@ -5,7 +5,9 @@ import com.proyecto.gestorcasilleros.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -20,11 +22,20 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.obtenerTodos());
     }
 
-    @PostMapping
-    public ResponseEntity<String> guardar(@RequestBody Usuario usuario) {
+    @PostMapping("/registrar")
+    public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
         return usuarioService.guardar(usuario) ?
                 ResponseEntity.ok("Usuario registrado correctamente") :
                 ResponseEntity.badRequest().body("Error al registrar usuario");
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Usuario usuario) {
+        System.out.println("logeado");
+        Optional<Usuario> usuarioAutenticado = usuarioService.login(usuario.getEmail(), usuario.getContrasena());
+
+        return usuarioAutenticado.isPresent() ?
+                ResponseEntity.ok("Inicio de sesión exitoso") :
+                ResponseEntity.status(401).body("Credenciales incorrectas");
     }
 
     @PutMapping
@@ -44,6 +55,7 @@ public class UsuarioController {
     public ResponseEntity<String> probarConexion() {
         //logger.info("Endpoint testConexion ha sido llamado");
         try {
+            System.out.println("Iniciando testConexion");
             usuarioService.obtenerTodos(); // Ejecuta una consulta para probar la conexión
             return ResponseEntity.ok("Conexión exitosa a la base de datos");
         } catch (Exception e) {
