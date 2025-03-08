@@ -29,8 +29,5 @@ public class UsuarioService {
         return usuarioRepository.actualizar(usuario) > 0;
     }
 
-    public boolean eliminar(int idUsuario) {
-        return usuarioRepository.eliminar(idUsuario) > 0;
-    }
 
 }

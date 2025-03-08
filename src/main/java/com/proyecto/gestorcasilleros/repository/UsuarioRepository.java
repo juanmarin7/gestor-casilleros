@@ -15,7 +15,7 @@ public class UsuarioRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Mapeador de filas
+    //se crean las filas acordes a la bd
     private final RowMapper<Usuario> usuarioRowMapper = (rs, rowNum) ->
             new Usuario(
                     rs.getInt("id_usuario"),
@@ -24,13 +24,13 @@ public class UsuarioRepository {
                     rs.getString("contraseña")
             );
 
-    // Obtener todos los usuarios
+    //peticion de prueba para validar conexion a la bd, trae los usuarios
     public List<Usuario> obtenerTodos() {
         String sql = "SELECT * FROM Usuario";
         return jdbcTemplate.query(sql, usuarioRowMapper);
     }
 
-    // Guardar un usuario
+    //guarda el usuario en la bd, y los datos del usuario se sostienen en el modelo
     public int guardar(Usuario usuario) {
         try {
             String sql = "INSERT INTO Usuario ( nombre, email, contraseña) VALUES (?, ?, ?)";
@@ -41,7 +41,7 @@ public class UsuarioRepository {
         }
     }
 
-    // Actualizar un usuario
+    //esta implementado para actualizar , de momento no se esta usando
     public int actualizar(Usuario usuario) {
         try {
             String sql = "UPDATE Usuario SET nombre = ?, email = ?, contraseña = ? WHERE id_usuario = ?";
@@ -51,16 +51,7 @@ public class UsuarioRepository {
             return 0;
         }
     }
-    public Optional<Usuario> findByEmail(String email) {
-        try {
-            String sql = "SELECT * FROM Usuario WHERE email = ?";
-            Usuario usuario = jdbcTemplate.queryForObject(sql, usuarioRowMapper, email);
-            return Optional.ofNullable(usuario);
-        } catch (Exception e) {
-            return Optional.empty(); // Si no encuentra el usuario, devuelve un Optional vacío
-        }
-    }
-
+    //se usa para logear el usuario en el aplicativo validando que los datos sean correctos
     public Optional<Usuario> loginUsuario(String email, String contrasena) {
         try {
             String sql = "SELECT * FROM Usuario WHERE email = ? AND contraseña = ?";
@@ -71,23 +62,4 @@ public class UsuarioRepository {
         }
     }
 
-    // Eliminar un usuario
-    public int eliminar(int idUsuario) {
-        try {
-            String sql = "DELETE FROM Usuario WHERE id_usuario = ?";
-            return jdbcTemplate.update(sql, idUsuario);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-    public boolean probarConexion() {
-        try {
-            jdbcTemplate.execute("SELECT 1");
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }

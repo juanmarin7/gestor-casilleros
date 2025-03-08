@@ -2,21 +2,19 @@ package com.proyecto.gestorcasilleros.model;
 
 import java.time.LocalDate;
 
-/**
- * Representa un usuario dentro del sistema de gestión de casilleros.
- */
+//este es el modelo de datos acorde a la bd
 public class Usuario {
-    // Variables de instancia
+    //Variables
     private int idUsuario;
     private String nombre;
     private String email;
     private String contrasena;
 
-    // Constructor vacío
+    //constructor vacio
     public Usuario() {
     }
 
-    // Constructor con parámetros
+    //constructor con parametros
     public Usuario(int idUsuario, String nombre, String email, String contrasena) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
@@ -24,7 +22,7 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    // Métodos Getters y Setters
+    //aca se crean los get y set para cada variable
     public int getIdUsuario() {
         return idUsuario;
     }
